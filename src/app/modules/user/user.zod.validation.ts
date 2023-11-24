@@ -44,7 +44,8 @@ const zodUserValidation = z.object({
     hobbies:z.array(z.string().min(1,{
         message:'hobby must not be empty'
     })),
-    address:zodAddress
+    address:zodAddress,
+    isDeleted: z.boolean().default(false),
 
 });
 

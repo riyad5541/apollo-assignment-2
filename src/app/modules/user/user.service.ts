@@ -7,7 +7,7 @@ const createUserIntoDB = async (user: User)=>{
     if(await UserModel.isUserExists(user.userId)){
         throw new Error('user already exists');
      }
-     
+
     const result = await UserModel.create(user)
 
     
@@ -25,8 +25,20 @@ const getSingleUserFromDB = async (userId:string)=>{
     return result;
 }
 
+
+const deleteUserFromDB = async (id:number)=>{
+    if(await UserModel.isUserNotExits(id)){
+        throw new Error('user does not exits')
+    }
+    const result = await UserModel.deleteOne({userId:id});
+    return result;
+}
+
+
+
 export const UserServices = {
     createUserIntoDB,
     getAllUsersFromDB,
     getSingleUserFromDB,
+    deleteUserFromDB,
 }

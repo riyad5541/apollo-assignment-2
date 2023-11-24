@@ -39,8 +39,15 @@ const getAllUsers = async(req:Request , res:Response) =>{
             message:'Users are retrived succesfully',
             data: result,
         });
-    }catch(err){
-        console.log(err)
+    }catch(error: any){
+        res.status(404).json({
+            success:false,
+            message:'User creation failed',
+            error:{
+                code:404,
+                description:error.message,
+            },
+        })
     }
 }
 
@@ -58,8 +65,40 @@ const getSingleUser = async(req:Request , res:Response) =>{
             message:'User is retrived succesfully',
             data: result,
         });
-    }catch(err){
-        console.log(err)
+    }catch(error: any){
+        res.status(404).json({
+            success:false,
+            message:'User creation failed',
+            error:{
+                code:404,
+                description:error.message,
+            },
+        })
+    }
+}
+
+
+const deleteUser = async(req:Request , res:Response) =>{
+    try{
+
+        const {userId} = req.params;
+
+    await UserServices.deleteUserFromDB(Number(userId))
+
+        res.status(200).json({
+            success:true,
+            message:'User is deleted succesfully',
+            data: null,
+        });
+    }catch(error: any){
+        res.status(404).json({
+            success:false,
+            message:'User creation failed',
+            error:{
+                code:404,
+                description:error.message,
+            },
+        })
     }
 }
 
@@ -67,4 +106,5 @@ export const UserControllers ={
     createUser,
     getAllUsers,
     getSingleUser,
+    deleteUser,
 }

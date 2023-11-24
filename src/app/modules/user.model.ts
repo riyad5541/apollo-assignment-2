@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { FullName, User, UserAddress, UserInterfaceModel, } from './user/user.interface';
+import bcrypt from 'bcrypt'
+import config from '../config';
 
 
 const userFullNameSchema = new Schema<FullName>(
@@ -34,11 +36,15 @@ const userSchema = new Schema<User, UserInterfaceModel>({
     isActive:{type:Boolean},
     hobbies:{type:[String]},
     address:userAddressSchema,
+    isDeleted:{type:Boolean},
 });
 
 
-userSchema.pre('save',async function(){
-    
+userSchema.pre('save',async function(next){
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const user = this;
+user.password = await bcrypt.hash(user.password,Number(config.bcrypt_salt_rounds));
+next();
 })
 
 
@@ -46,6 +52,11 @@ userSchema.pre('save',async function(){
 userSchema.statics.isUserExists = async function (id: number){
     const existingUser = await UserModel.findOne({userId: id});
     return existingUser;
+}
+
+userSchema.statics.isUserNotExits = async function(id:number){
+    const existingUser = await UserModel.findOne({userId: id});
+    return existingUser === null;
 }
 
 
