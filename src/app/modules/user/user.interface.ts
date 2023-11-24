@@ -1,4 +1,4 @@
-export type UserName = {
+export type FullName = {
     firstName: string;
     lastName: string;
 }
@@ -11,11 +11,12 @@ export type UserAddress = {
 
 export type User = {
     userId:number;
-    userName:string;
-    fullName: UserName;
-    email: string;
+    username:string;
+    password:string,
+    fullName: FullName;
     age: number;
+    email: string;
     isActive:boolean;
-    // hobbies:string[];
+    hobbies:string[];
     address:UserAddress;
   }

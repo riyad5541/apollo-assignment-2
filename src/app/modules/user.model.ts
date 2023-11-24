@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
-import { User, UserAddress, UserName } from './user/user.interface';
+import { FullName, User, UserAddress, } from './user/user.interface';
 
 
-const userFullNameSchema = new Schema<UserName>(
+const userFullNameSchema = new Schema<FullName>(
     {
         firstName:{
             type:String,
@@ -16,7 +16,7 @@ const userFullNameSchema = new Schema<UserName>(
     }
 )
 
-const userAssressSchema = new Schema<UserAddress>(
+const userAddressSchema = new Schema<UserAddress>(
     {
         street: String,
         city: String,
@@ -25,16 +25,15 @@ const userAssressSchema = new Schema<UserAddress>(
 )
 
 const userSchema = new Schema<User>({
-    userId:{type: Number },
-    userName:{
-        type:String,
-        required: true,
-    },
+    userId:{type: Number, unique:true },
+    username:{type:String},
+    password:{type: String},
     fullName:userFullNameSchema,
-    email:{type: String , required:true},
     age:{type:Number},
+    email:{type: String},
     isActive:{type:Boolean},
-    address:userAssressSchema,
+    hobbies:{type:[String]},
+    address:userAddressSchema,
 })
 
 
