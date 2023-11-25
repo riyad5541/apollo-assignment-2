@@ -6,13 +6,16 @@ const createUserIntoDB = async (user: User)=>{
 
     if(await UserModel.isUserExists(user.userId)){
         throw new Error('user already exists');
+     }else if (await UserModel.isEmailExists(user.username)){
+        throw new Error('User already exists')
      }
 
     const result = await UserModel.create(user)
+    const resultWithoutPassword = await UserModel.findById(result._id).select({password:0})
 
     
 
-    return result;
+    return resultWithoutPassword;
 }
 
 const getAllUsersFromDB = async ()=>{
