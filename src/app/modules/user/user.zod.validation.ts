@@ -22,7 +22,17 @@ const zodAddress = z.object({
 });
 
 
-
+const zodOrders = z.object({
+    productName:z.string().min(1,{
+        message:'product name must not be empty'
+    }),
+    price:z.number().min(0,{
+        message:'price must be positive number'
+    }),
+    quantity:z.number().min(1,{
+        message:'quantity must be at least 1'
+    }),
+})
 
 
 const zodUserValidation = z.object({
@@ -47,6 +57,7 @@ const zodUserValidation = z.object({
         message:'hobby must not be empty'
     })),
     address:zodAddress,
+    orders:z.array(zodOrders).optional(),
     isDeleted: z.boolean().default(false),
 
 });

@@ -1,5 +1,5 @@
 import { UserModel } from "../user.model";
-import { User } from "./user.interface";
+import { Orders, User } from "./user.interface";
 
 const createUserIntoDB = async (user: User)=>{
 
@@ -67,6 +67,45 @@ const deleteUserFromDB = async (id:number)=>{
 }
 
 
+const addNewProductsIntoDB = async(id:number, newOrder: Orders) =>{
+    const {productName, price, quantity} = newOrder;
+    if(await UserModel.isUserNotExits(id)){
+        throw new Error(`user with userId ${id} not found`);
+    }
+
+    // eslint-disable-next-line prefer-const
+    let user = await UserModel.findOne({userId: id});
+    if(!user){
+        throw new Error(`user with userId ${id}not found.`);
+    }
+
+    if(user.orders){
+        user.orders.push({
+            productName,price,quantity
+        })
+    }else{
+        user.orders = [{productName, price, quantity}];
+    }
+
+    const result = await user.save();
+
+    return result;
+}
+
+
+
+const retriveOrderesSpecificUserDB = async (id:number) =>{
+    if(await UserModel.isUserNotExits(id)){
+        throw new Error(`user with userId ${id} not found.`)
+    }
+    const result = await UserModel.aggregate([
+        {$match: {userId: id}},
+        {$project:{_id:0, orders:1}}
+    ])
+    const orders = result[0];
+    return orders
+}
+
 
 export const UserServices = {
     createUserIntoDB,
@@ -74,4 +113,6 @@ export const UserServices = {
     getSingleUserFromDB,
     deleteUserFromDB,
     updateAUserByID,
+    addNewProductsIntoDB,
+    retriveOrderesSpecificUserDB,
 }
