@@ -36,7 +36,33 @@ const getAllUsers = async(req:Request , res:Response) =>{
 
         res.status(200).json({
             success:true,
-            message:'Users are retrived succesfully',
+            message:'Users fetched succesfully',
+            data: result,
+        });
+    }catch(error: any){
+        res.status(404).json({
+            success:false,
+            message:'failed to fetch all users',
+            error:{
+                code:404,
+                description:'failed to fetch all users',
+            },
+        })
+    }
+}
+
+
+const getSingleUser = async(req:Request , res:Response) =>{
+    try{
+
+        const {userId} = req.params;
+
+
+        const result = await UserServices.getSingleUserFromDB(Number(userId))
+
+        res.status(200).json({
+            success:true,
+            message:'User is retrived succesfully',
             data: result,
         });
     }catch(error: any){
@@ -52,23 +78,21 @@ const getAllUsers = async(req:Request , res:Response) =>{
 }
 
 
-const getSingleUser = async(req:Request , res:Response) =>{
+const updateAUser = async (req:Request, res:Response) =>{
     try{
-
         const {userId} = req.params;
-
-
-        const result = await UserServices.getSingleUserFromDB(userId)
+        const updatedDoc = req.body;
+        const result = await UserServices.updateAUserByID(Number(userId), updatedDoc)
 
         res.status(200).json({
             success:true,
-            message:'User is retrived succesfully',
+            message:'User updated succesfully',
             data: result,
         });
     }catch(error: any){
         res.status(404).json({
             success:false,
-            message:'User creation failed',
+            message:'User not found',
             error:{
                 code:404,
                 description:error.message,
@@ -107,4 +131,5 @@ export const UserControllers ={
     getAllUsers,
     getSingleUser,
     deleteUser,
+    updateAUser
 }
