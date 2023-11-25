@@ -152,6 +152,25 @@ const addANewProductOrder = async(req:Request, res:Response) =>{
 }
 
 
+const retriveOrdersSpecificUser = async(req:Request,res:Response) =>{
+    try{
+        const {userId} = req.params;
+        const orders = await UserServices.retriveOrderesSpecificUserDB(Number(userId))
+
+        res.json({
+            success:true,
+            message:'order fetched successfully',
+            data: orders,
+        });
+    }catch(error: any){
+        res.status(500).json({
+            success:false,
+            message:error.message,
+        })
+    }
+}
+
+
 export const UserControllers ={
     createUser,
     getAllUsers,
@@ -159,4 +178,5 @@ export const UserControllers ={
     deleteUser,
     updateAUser,
     addANewProductOrder,
+    retriveOrdersSpecificUser,
 }
