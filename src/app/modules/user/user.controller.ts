@@ -68,7 +68,7 @@ const getSingleUser = async(req:Request , res:Response) =>{
     }catch(error: any){
         res.status(404).json({
             success:false,
-            message:'User creation failed',
+            message:'User not found',
             error:{
                 code:404,
                 description:error.message,
@@ -170,6 +170,29 @@ const retriveOrdersSpecificUser = async(req:Request,res:Response) =>{
     }
 }
 
+const calculateTotalPriceForAUserOrder = async(req:Request,res:Response) =>{
+    try{
+        const {userId} = req.params;
+        const result = await UserServices.calculateTotalPriceForAUserDB(Number(userId))
+        res.status(200).json({
+            success:true,
+            message:'total price calculated successfully',
+            data: {
+                totalPrice: result,
+            },
+        });
+    }catch(error: any){
+        res.status(404).json({
+            success:false,
+            message:'User not found',
+            error:{
+                code:404,
+                description:error.message,
+            },
+        })
+    }
+}
+
 
 export const UserControllers ={
     createUser,
@@ -179,4 +202,5 @@ export const UserControllers ={
     updateAUser,
     addANewProductOrder,
     retriveOrdersSpecificUser,
+    calculateTotalPriceForAUserOrder
 }

@@ -107,6 +107,29 @@ const retriveOrderesSpecificUserDB = async (id:number) =>{
 }
 
 
+const calculateTotalPriceForAUserDB = async(id:number) =>{
+    if(await UserModel.isUserNotExits(id)){
+        throw new Error(`user with userId ${id} not found.`)
+    }
+    const result = await UserModel.aggregate([
+        {$match: {userId: id}},
+        {$unwind:'$orders'},
+        {
+            $group:{
+                _id:null,
+                totalPrice:{
+                    $sum:{$multiply:['$orders.price', '$orders.quantity']},
+                },
+            },
+        },
+        {$project:{_id:0, totalPrice:1}},
+    ])
+    const totalPrice = result[0].totalPrice;
+
+    return totalPrice;   
+}
+
+
 export const UserServices = {
     createUserIntoDB,
     getAllUsersFromDB,
@@ -115,4 +138,5 @@ export const UserServices = {
     updateAUserByID,
     addNewProductsIntoDB,
     retriveOrderesSpecificUserDB,
+    calculateTotalPriceForAUserDB
 }

@@ -7,12 +7,10 @@ import config from '../config';
 const userFullNameSchema = new Schema<FullName>(
     {
         firstName:{
-            type:String,
-            required:true,
+            type:String
         },
         lastName:{
-            type:String,
-            required:true,
+            type:String
         }
 
     }
@@ -20,9 +18,9 @@ const userFullNameSchema = new Schema<FullName>(
 
 const userAddressSchema = new Schema<UserAddress>(
     {
-        street: String,
-        city: String,
-        country:String,
+        street:{type:String},
+        city:{type:String},
+        country:{type:String},
     }
 )
 
@@ -36,7 +34,7 @@ const ordersSchema = new Schema<Orders>({
 
 const userSchema = new Schema<User, UserInterfaceModel>({
     userId:{type: Number, unique:true },
-    username:{type:String},
+    username:{type:String,unique:true},
     password:{type: String},
     fullName:userFullNameSchema,
     age:{type:Number},
@@ -49,7 +47,7 @@ const userSchema = new Schema<User, UserInterfaceModel>({
 });
 
 
-userSchema.pre('save',async function(next){
+userSchema.pre('save',async function(this:User, next){
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const user = this;
 user.password = await bcrypt.hash(user.password,Number(config.bcrypt_salt_rounds));
