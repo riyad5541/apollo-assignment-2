@@ -11,11 +11,11 @@ const createUserIntoDB = async (user: User)=>{
      }
 
     const result = await UserModel.create(user)
-    // const resultWithoutPassword = await UserModel.findById(result._id).select({password:0})
+    const resultWithoutPassword = await UserModel.findById(result._id).select({password:0})
 
     
 
-    return result;
+    return resultWithoutPassword;
 }
 
 const getAllUsersFromDB = async ()=>{
