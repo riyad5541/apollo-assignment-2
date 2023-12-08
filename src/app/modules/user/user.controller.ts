@@ -10,7 +10,6 @@ const createUser = async (req:Request , res:Response) =>{
 
         const userZodparsedData = await zodUserValidations.zodUserValidation.parse(req.body);
 
- console.log(userZodparsedData)
     const result = await UserServices.createUserIntoDB(userZodparsedData);
 
 
