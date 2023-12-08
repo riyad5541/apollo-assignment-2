@@ -11,11 +11,11 @@ const createUserIntoDB = async (user: User)=>{
      }
 
     const result = await UserModel.create(user)
-    const resultWithoutPassword = await UserModel.findById(result._id).select({password:0})
+    // const resultWithoutPassword = await UserModel.findById(result._id).select({password:0})
 
     
 
-    return resultWithoutPassword;
+    return result;
 }
 
 const getAllUsersFromDB = async ()=>{
@@ -49,7 +49,7 @@ const getSingleUserFromDB = async (id:number)=>{
 }
 
 
-const updateAUserByID = async (id:number, updatedDoc: User) =>{
+const updateAUserByID = async (id:number, updatedDoc: Partial<User>) =>{
     if(await UserModel.isUserNotExits(id)){
         throw new Error('user does not exist')
     }

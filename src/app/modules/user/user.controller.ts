@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
 import { UserServices } from "./user.service";
-import zodUserValidation from "./user.zod.validation";
+import { zodUserValidations } from "./user.zod.validation";
+import { User } from "./user.interface";
 
 const createUser = async (req:Request , res:Response) =>{
   
     try{
-        const {user:userData} = req.body;
+        // const {user:userData} = req.body;
 
-        const userZodparsedData = await zodUserValidation.parse(userData);
+        const userZodparsedData = await zodUserValidations.zodUserValidation.parse(req.body);
 
-
+ console.log(userZodparsedData)
     const result = await UserServices.createUserIntoDB(userZodparsedData);
 
 
@@ -81,8 +82,9 @@ const getSingleUser = async(req:Request , res:Response) =>{
 const updateAUser = async (req:Request, res:Response) =>{
     try{
         const {userId} = req.params;
-        const updatedDoc = req.body;
-        const result = await UserServices.updateAUserByID(Number(userId), updatedDoc)
+        const zodvalidatedData = zodUserValidations.updateZodUserValidation.parse(req.body);
+
+        const result = await UserServices.updateAUserByID(Number(userId), zodvalidatedData as User)
 
         res.status(200).json({
             success:true,
